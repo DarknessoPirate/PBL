@@ -52,13 +52,13 @@ class Image_board_detection:
         full_path = os.path.join(cwd, img_dir)
         if not os.path.isdir(full_path):
             exit (f"Directory '{full_path}' doesn't exist.")
-        images = [file for file in os.listdir(full_path) if file.endswith(('.png', '.jpg', '.jpeg'))]
+        images = [file for file in os.listdir(full_path) if file.endswith(('.png', '.jpg', '.jpeg', 'JPEG'))]
         img_data = [cv2.imread(os.path.join(full_path, img)) for img in images]
         return img_data
     
     def img_color_transform(self, min_contour_area = 2500, max_contour_area = 4500) -> list:
         contours_size = {}
-        img_data = self.img_read(img_dir="img/type1") #<---------Tutaj na razie wpisuje się lokalizacje ze zdjęciami
+        img_data = self.img_read(img_dir="img\masks") #<---------Tutaj na razie wpisuje się lokalizacje ze zdjęciami
         for i, img in enumerate(img_data):
             if img is None: continue          
             img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -73,7 +73,7 @@ class Image_board_detection:
         #Do usuniÄcia - do podglÄdu konturĂłw
             img_with_contours = img.copy()
             cv2.drawContours(img_with_contours, contours_size[i], -1, (0, 255, 0), 2)
-            img_resized = cv2.resize(img_with_contours , None, fx=0.35, fy=0.35)
+            img_resized = cv2.resize(thresholding , None, fx=0.35, fy=0.35)
             cv2.imshow(str(i), img_resized)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
@@ -274,7 +274,7 @@ class Image_board_detection:
             plt.ylabel('Frequency')
             plt.show()
             # Wczytaj obraz
-            img = cv2.imread('img/type1/PeknieteParzed.jpg') #<---------Tutaj na razie wpisuje się zdjęcie referencyjne
+            img = cv2.imread('img/type1/14_50_36_Pro.jpg') #<---------Tutaj na razie wpisuje się zdjęcie referencyjne
 
             for cnt_dict in png.values():
                 contour_ref = cnt_dict["contour_ref"]
